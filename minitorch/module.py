@@ -50,8 +50,10 @@ class Module:
             The name and `Parameter` of each ancestor parameter.
         """
         params = [(k, v) for k, v in self._parameters.items()]
-        for module in self.modules():
-            params.extend(module.named_parameters())
+        for module_name, module in self.__dict__["_modules"].items():
+            for param_name, param in module.named_parameters():
+                name = "%s.%s" % (module_name, param_name)
+                params.append((name, param))
         return params
 
     def parameters(self) -> Sequence[Parameter]:
